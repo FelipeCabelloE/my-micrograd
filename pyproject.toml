@@ -1,0 +1,17 @@
+[project]
+name = "my-micrograd"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "FelipeCabelloE", email = "98831429+FelipeCabelloE@users.noreply.github.com" }
+]
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+my-micrograd = "my_micrograd:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
