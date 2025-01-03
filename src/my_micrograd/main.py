@@ -18,12 +18,10 @@ class Value:
 
     @property
     def _prev(self) -> Set["Value"]:
-        # Return a set of children as the _prev field (computed property)
         return set(self._children)
 
     def __repr__(self) -> str:
-        # Only return the `data` when printing
-        return f"Value(data={self.data})"
+        return f"Value(data={self.data}, label={self.label})"
 
     def __add__(self, other: "Value") -> "Value":
         if not isinstance(other, Value):
@@ -34,6 +32,10 @@ class Value:
         if not isinstance(other, Value):
             raise TypeError("Operands must be instances of Value")
         return Value(self.data * other.data, (self, other), "*")
+
+    def with_label(self, label: str) -> "Value":
+        # Create a new Value object with the same properties, but with a new label
+        return Value(self.data, self._children, self._op, label, self.grad)
 
 
 def trace(root: Value):
@@ -57,7 +59,11 @@ def draw_dot(root: Value):
     nodes, edges = trace(root)
     for n in nodes:
         uid = str(id(n))
-        dot.node(name=uid, label=f"{n.label} | {n.data:.4f}", shape="record")
+        dot.node(
+            name=uid,
+            label=f"{n.label} | data {n.data:.4f} | grad {n.grad:.4f}",
+            shape="record",
+        )
         if n._op:
             dot.node(name=uid + n._op, label=n._op)
             dot.edge(uid + n._op, uid)
